@@ -1,9 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "qwik-project-name",
-  "short_name": "Welcome to Qwik",
+  "name": "Neura · Centro de estimulación y rehabilitación",
+  "short_name": "Neura",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#fff",
-  "description": "A Qwik project app."
+  "background_color": "#faf8ec",
+  "theme_color": "#3e7b70",
+  "description": "Centro de estimulación y rehabilitación cognitiva y sensoriomotriz."
 }

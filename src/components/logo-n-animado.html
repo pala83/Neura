@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Logo N animado</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+  </head>
+  <body class="grid min-h-dvh place-items-center bg-[#faf8ec]">
+    <svg
+      id="logo-n"
+      viewBox="40 25 498 520"
+      role="img"
+      aria-label="Logo N"
+      class="w-[min(72vmin,520px)] overflow-visible stroke-[#3b7f76] stroke-9 [stroke-linecap:round]"
+    ></svg>
+
+    <script>
+      (() => {
+        const MARGEN = 9 + 3; // grosor (stroke-9) + hueco mínimo entre líneas al chocar
+        const VEL = [5, 11]; // velocidad media de cada vértice (unidades/seg)
+
+        // Contorno de la N: nunca se mueve
+        const FIJOS = {
+          LTL: [60, 45],
+          B: [168, 45],
+          LBR: [168, 525],
+          LBL: [60, 525],
+          G: [168, 225],
+          RTL: [410, 45],
+          RTR: [518, 45],
+          RBR: [518, 525],
+          RBL: [410, 525],
+          R1: [410, 345],
+        };
+        // [x, y] se mueve libre · [x, y, desde, hasta] se desliza sobre ese borde
+        const MOVILES = {
+          E: [60, 262, "LTL", "LBL"],
+          C: [168, 165, "B", "G"],
+          H: [168, 390, "G", "LBR"],
+          U1: [299, 207.4, "B", "R1"],
+          L: [242, 316.74, "G", "RBL"],
+          Q1: [518, 285, "RTR", "RBR"],
+          R0: [410, 195, "RTL", "R1"],
+          R2: [410, 402, "R1", "RBL"],
+          X1: [120, 118],
+          D: [90, 190],
+          F: [117, 315],
+          I: [112, 447],
+          X2: [229, 184],
+          K: [262, 243],
+          M: [307, 307],
+          N1: [340, 362],
+          X4: [466, 122],
+          Y: [473, 252],
+          X3: [465, 432],
+        };
+        const LINEAS = `
+    LTL-B B-C C-G G-H H-LBR LBR-LBL LBL-E E-LTL B-U1 U1-R1 G-L L-RBL
+    RTL-RTR RTR-Q1 Q1-RBR RBR-RBL RBL-R2 R2-R1 R1-R0 R0-RTL
+    LTL-X1 X1-C B-X1 X1-D LTL-D D-E D-F E-F E-I G-F F-H F-I H-I I-LBL I-LBR
+    B-X2 X2-K C-X2 X2-U1 C-K G-K K-U1 K-L K-M U1-M L-M L-N1 M-N1 M-R1 N1-R1 N1-R2 N1-RBL
+    RTL-X4 RTR-X4 X4-R0 X4-Y X4-Q1 R0-Y Y-Q1 Y-R1 Q1-R1 R1-X3 Q1-X3 R2-X3 X3-RBL X3-RBR`;
+
+        const svg = document.getElementById("logo-n");
+        const P = Object.fromEntries(
+          Object.entries({ ...FIJOS, ...MOVILES }).map(([n, [x, y]]) => [
+            n,
+            { x, y },
+          ]),
+        );
+        const PTS = Object.values(P);
+        const E = LINEAS.trim()
+          .split(/\s+/)
+          .map((s) => {
+            const [a, b] = s.split("-").map((n) => P[n]);
+            return {
+              a,
+              b,
+              el: svg.appendChild(
+                document.createElementNS("http://www.w3.org/2000/svg", "line"),
+              ),
+            };
+          });
+
+        // Distancia² del punto P al segmento AB; deja en (cx, cy) el punto más cercano
+        let cx, cy;
+        function dist2(px, py, ax, ay, bx, by) {
+          const dx = bx - ax,
+            dy = by - ay;
+          const t = gsap.utils.clamp(
+            0,
+            1,
+            ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy || 1),
+          );
+          cx = ax + t * dx;
+          cy = ay + t * dy;
+          return (px - cx) ** 2 + (py - cy) ** 2;
+        }
+
+        // Regla anti-cruce: distancia mínima entre el vértice p (puesto en x,y) y todo lo que no
+        // le pertenece, más la dirección para alejarse. Si nunca baja de MARGEN, nada se cruza.
+        function holgura(p, x, y) {
+          let d = Infinity,
+            n = [0, 0];
+          for (const { a, b } of E) {
+            if (a === p || b === p) {
+              // sus líneas contra los demás vértices
+              const r = a === p ? b : a;
+              for (const q of PTS) {
+                if (q === p || q === r) continue;
+                const d2 = dist2(q.x, q.y, x, y, r.x, r.y);
+                if (d2 < d) {
+                  d = d2;
+                  n = [cx - q.x, cy - q.y];
+                }
+              }
+            } else {
+              // el vértice contra las líneas ajenas
+              const d2 = dist2(x, y, a.x, a.y, b.x, b.y);
+              if (d2 < d) {
+                d = d2;
+                n = [x - cx, y - cy];
+              }
+            }
+          }
+          const l = Math.hypot(...n) || 1;
+          return { d: Math.sqrt(d), n: { x: n[0] / l, y: n[1] / l } };
+        }
+
+        // Destino al azar cerca de su posición original (sobre su borde si es deslizante)
+        function destino(m) {
+          const r = gsap.utils.random(-m.R, m.R);
+          if (m.u) return [m.ax + m.u[0] * r, m.ay + m.u[1] * r];
+          const ang = Math.random() * Math.PI * 2,
+            rr = m.R * Math.sqrt(Math.random());
+          return [m.ax + Math.cos(ang) * rr, m.ay + Math.sin(ang) * rr];
+        }
+
+        // GSAP lleva al vértice hacia un destino; en cada cuadro se valida la nueva posición.
+        // Si choca, se queda donde estaba y sale hacia el lado contrario (rebote).
+        function pasear(m, n = { x: 0, y: 0 }) {
+          const { p, prox } = m;
+          let t = destino(m);
+          for (
+            let k = 0;
+            k < 12 && (t[0] - p.x) * n.x + (t[1] - p.y) * n.y < 0;
+            k++
+          )
+            t = destino(m);
+          m.tw?.kill();
+          prox.x = p.x;
+          prox.y = p.y;
+          m.tw = gsap.to(prox, {
+            x: t[0],
+            y: t[1],
+            duration: Math.max(1.5, Math.hypot(t[0] - p.x, t[1] - p.y) / m.vel),
+            ease: n.x || n.y ? "sine.out" : "sine.inOut",
+            onUpdate() {
+              const h = holgura(p, prox.x, prox.y);
+              if (h.d < MARGEN) pasear(m, h.n);
+              else {
+                p.x = prox.x;
+                p.y = prox.y;
+              }
+            },
+            onComplete: () =>
+              gsap.delayedCall(gsap.utils.random(0, 1.5), pasear, [m]),
+          });
+        }
+
+        const dibujar = () =>
+          E.forEach(({ a, b, el }) => {
+            el.setAttribute("x1", a.x);
+            el.setAttribute("y1", a.y);
+            el.setAttribute("x2", b.x);
+            el.setAttribute("y2", b.y);
+          });
+        dibujar();
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        for (const [nombre, [x, y, desde, hasta]] of Object.entries(MOVILES)) {
+          const p = P[nombre];
+          const m = {
+            p,
+            ax: x,
+            ay: y,
+            prox: { x, y },
+            vel: gsap.utils.random(...VEL),
+            R: gsap.utils.clamp(8, 38, 1.1 * holgura(p, x, y).d),
+          };
+          if (desde) {
+            const a = P[desde],
+              b = P[hasta],
+              l = Math.hypot(b.x - a.x, b.y - a.y);
+            m.u = [(b.x - a.x) / l, (b.y - a.y) / l];
+          }
+          gsap.delayedCall(gsap.utils.random(0, 2), pasear, [m]);
+        }
+
+        // Cuadros largos (pestaña en segundo plano) cuentan como cortos: los pasos siempre son
+        // mucho menores que MARGEN, así ningún vértice puede atravesar una línea de un salto.
+        gsap.ticker.lagSmoothing(100, 33);
+        gsap.ticker.add(dibujar);
+      })();
+    </script>
+  </body>
+</html>
