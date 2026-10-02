@@ -1,18 +1,22 @@
 import { component$ } from "@builder.io/qwik";
 import { Icon, type IconName } from "~/components/icons/icon";
+import { trackContact, type ContactChannel } from "~/lib/analytics";
 
 interface ContactLinkProps {
   href: string;
   icon: IconName;
   label: string;
   value: string;
+  /** Si se indica, el click se registra como evento "contacto" en Analytics. */
+  channel?: ContactChannel;
 }
 
 /** Tarjeta-enlace de contacto (teléfono, email, dirección). */
 export const ContactLink = component$<ContactLinkProps>(
-  ({ href, icon, label, value }) => (
+  ({ href, icon, label, value, channel }) => (
     <a
       href={href}
+      onClick$={() => channel && trackContact(channel)}
       class="group reveal bg-card text-foreground hover:border-primary/45 hover:bg-muted flex items-center gap-4.5 rounded-xl border px-6 py-5.5 no-underline transition duration-350 hover:-translate-y-0.5"
     >
       <span class="bg-accent text-primary flex size-13 shrink-0 items-center justify-center rounded-full">

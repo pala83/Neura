@@ -53,6 +53,8 @@ export const CENTER = {
   street: address.street,
   /** "Localidad, provincia · CP" */
   city: `${address.locality}, ${address.province} · ${address.postalCode}`,
+  /** "Localidad, provincia" */
+  region: `${address.locality}, ${address.province}`,
   /** "Calle y número, Localidad" */
   shortAddress: `${address.street}, ${address.locality}`,
   mapsHref: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`,

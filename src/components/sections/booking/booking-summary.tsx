@@ -2,7 +2,8 @@ import { component$ } from "@builder.io/qwik";
 import { Icon } from "~/components/icons/icon";
 import { Card, LinkButton } from "~/components/ui";
 import { CENTER } from "~/data/center";
-import { formatLongDate, pad } from "~/lib/availability";
+import { trackBookingRequest } from "~/lib/analytics";
+import { formatLongDate, keyOf, pad } from "~/lib/availability";
 import { useBooking } from "./use-booking";
 
 /** Resumen del turno elegido con accesos para pedirlo por email o teléfono. */
@@ -17,6 +18,7 @@ export const BookingSummary = component$(() => {
   );
   if (!valid || !day) return null;
 
+  const fecha = keyOf(day);
   const subject = `Solicitud de turno · ${disc.name} · ${pad(day.d)}/${pad(day.m + 1)} ${slot} h`;
 
   return (
@@ -34,11 +36,16 @@ export const BookingSummary = component$(() => {
       </div>
       <LinkButton
         href={`mailto:${CENTER.email}?subject=${encodeURIComponent(subject)}`}
+        onClick$={() => trackBookingRequest("email", disc.name, fecha, slot)}
       >
         <Icon name="mail" class="size-4.5" />
         Solicitar por email
       </LinkButton>
-      <LinkButton href={CENTER.phoneHref} look="outline">
+      <LinkButton
+        href={CENTER.phoneHref}
+        look="outline"
+        onClick$={() => trackBookingRequest("telefono", disc.name, fecha, slot)}
+      >
         <Icon name="phone" class="size-4.5" />
         Llamar al centro
       </LinkButton>

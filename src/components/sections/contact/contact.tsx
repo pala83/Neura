@@ -12,7 +12,7 @@ export const Contact = component$(() => (
           Estamos para
           <span q:slot="highlight">orientarte.</span>
         </SectionHeading>
-        <p class="text-muted-foreground max-w-128 text-lg leading-relaxed">
+        <p class="text-muted-foreground max-w-lg text-lg leading-relaxed">
           Escribinos o llamanos para hacer consultas, pedir un turno o coordinar
           una primera entrevista. Respondemos dentro del horario de atención.
         </p>
@@ -21,12 +21,14 @@ export const Contact = component$(() => (
         <ContactLink
           href={CENTER.phoneHref}
           icon="phone"
+          channel="telefono"
           label="Teléfono"
           value={CENTER.phoneLabel}
         />
         <ContactLink
           href={`mailto:${CENTER.email}`}
           icon="mail"
+          channel="email"
           label="Gmail"
           value={CENTER.email}
         />
