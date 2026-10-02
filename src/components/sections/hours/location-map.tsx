@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Icon } from "~/components/icons/icon";
 import { Card, LinkButton } from "~/components/ui";
-import { CENTER } from "~/data/neura";
+import { CENTER } from "~/data/center";
 
 /** Mapa ilustrado (SVG) con la dirección y el acceso a Google Maps. */
 export const LocationMap = component$(() => (

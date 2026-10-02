@@ -1,4 +1,5 @@
-import { CENTER, type Discipline } from "~/data/neura";
+import { CENTER } from "~/data/center";
+import type { Discipline } from "~/data/neura";
 
 /**
  * Disponibilidad de ejemplo (portada del diseño). Es determinística: el estado de

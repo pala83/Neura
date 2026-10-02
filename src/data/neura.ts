@@ -1,18 +1,5 @@
 import type { IconName } from "~/components/icons/icon";
 
-/** Datos del centro. Los valores entre corchetes son placeholders del diseño. */
-export const CENTER = {
-  phoneLabel: "[Teléfono del centro]",
-  phoneHref: "tel:[TELEFONO]",
-  email: "[correo]@gmail.com",
-  street: "[Calle y número]",
-  city: "[Localidad, provincia] · [CP]",
-  shortAddress: "[Calle y número], [Localidad]",
-  quickAddress: "[Dirección del centro]",
-  mapsHref: "https://www.google.com/maps/search/?api=1&query=[DIRECCION]",
-  timeZone: "America/Argentina/Buenos_Aires",
-} as const;
-
 export const NAV_LINKS = [
   { href: "#centro", label: "El centro", long: "El centro" },
   {
@@ -168,18 +155,3 @@ export const PROCESS_STEPS = [
     text: "El equipo revisa los avances de forma periódica y ajusta el plan junto al paciente y su familia.",
   },
 ] as const;
-
-/** Horario general del centro, en minutos desde las 00:00 (null = cerrado). Índice 0 = domingo. */
-export const OPENING_HOURS: {
-  day: string;
-  open: [number, number] | null;
-  label: string;
-}[] = [
-  { day: "Domingo", open: null, label: "Cerrado" },
-  { day: "Lunes", open: [480, 1200], label: "[08:00 – 20:00]" },
-  { day: "Martes", open: [480, 1200], label: "[08:00 – 20:00]" },
-  { day: "Miércoles", open: [480, 1200], label: "[08:00 – 20:00]" },
-  { day: "Jueves", open: [480, 1200], label: "[08:00 – 20:00]" },
-  { day: "Viernes", open: [480, 1200], label: "[08:00 – 20:00]" },
-  { day: "Sábado", open: [540, 780], label: "[09:00 – 13:00]" },
-];

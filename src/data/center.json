@@ -1,0 +1,24 @@
+{
+  "name": "Neura",
+  "phone": {
+    "display": "2494538797",
+    "number": "2494538797"
+  },
+  "email": "neurarauch@gmail.com",
+  "address": {
+    "street": "Coronel Suárez 176",
+    "locality": "Rauch",
+    "province": "Buenos Aires",
+    "postalCode": "7203"
+  },
+  "timeZone": "America/Argentina/Buenos_Aires",
+  "hours": {
+    "lunes": { "open": "08:00", "close": "20:00" },
+    "martes": { "open": "08:00", "close": "20:00" },
+    "miercoles": { "open": "08:00", "close": "20:00" },
+    "jueves": { "open": "08:00", "close": "20:00" },
+    "viernes": { "open": "08:00", "close": "20:00" },
+    "sabado": { "open": "09:00", "close": "13:00" },
+    "domingo": null
+  }
+}

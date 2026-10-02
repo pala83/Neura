@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Icon } from "~/components/icons/icon";
 import { Card, LinkButton } from "~/components/ui";
-import { CENTER } from "~/data/neura";
+import { CENTER } from "~/data/center";
 import { formatLongDate, pad } from "~/lib/availability";
 import { useBooking } from "./use-booking";
 

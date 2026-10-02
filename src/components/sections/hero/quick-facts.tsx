@@ -1,10 +1,10 @@
 import { component$ } from "@builder.io/qwik";
 import { Icon, type IconName } from "~/components/icons/icon";
-import { CENTER } from "~/data/neura";
+import { CENTER, HOURS_SHORT } from "~/data/center";
 
 const FACTS: { icon: IconName; text: string }[] = [
-  { icon: "clock", text: "Lun a vie · [08:00 – 20:00]" },
-  { icon: "pin", text: CENTER.quickAddress },
+  { icon: "clock", text: HOURS_SHORT },
+  { icon: "pin", text: CENTER.shortAddress },
   { icon: "phone", text: CENTER.phoneLabel },
 ];
 

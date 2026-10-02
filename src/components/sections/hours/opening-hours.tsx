@@ -2,7 +2,7 @@ import { component$ } from "@builder.io/qwik";
 import { cn } from "@qwik-ui/utils";
 import { Icon } from "~/components/icons/icon";
 import { Badge, Card, LinkButton } from "~/components/ui";
-import { OPENING_HOURS } from "~/data/neura";
+import { OPENING_HOURS } from "~/data/center";
 import { centerNow } from "~/lib/availability";
 
 /** Lunes primero, domingo al final. */

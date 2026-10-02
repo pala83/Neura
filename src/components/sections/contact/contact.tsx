@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Container, Section } from "~/components/brand/container";
 import { SectionHeading } from "~/components/brand/section-heading";
-import { CENTER } from "~/data/neura";
+import { CENTER } from "~/data/center";
 import { ContactLink } from "./contact-link";
 
 export const Contact = component$(() => (

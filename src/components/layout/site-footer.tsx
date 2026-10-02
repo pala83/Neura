@@ -1,7 +1,8 @@
 import { component$, Slot } from "@builder.io/qwik";
 import { Container } from "~/components/brand/container";
 import { Separator } from "~/components/ui";
-import { CENTER, NAV_LINKS } from "~/data/neura";
+import { CENTER, HOURS_SUMMARY } from "~/data/center";
+import { NAV_LINKS } from "~/data/neura";
 import LogoLight from "~/media/logo-neura-light.webp?jsx";
 
 const FooterColumn = component$<{ title: string }>(({ title }) => (
@@ -45,9 +46,9 @@ export const SiteFooter = component$(() => (
           <span>{CENTER.shortAddress}</span>
         </FooterColumn>
         <FooterColumn title="Atención">
-          <span>Lunes a viernes · [08:00 – 20:00]</span>
-          <span>Sábados · [09:00 – 13:00]</span>
-          <span>Domingos · Cerrado</span>
+          {HOURS_SUMMARY.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
         </FooterColumn>
       </div>
       <div class="flex flex-col gap-6">

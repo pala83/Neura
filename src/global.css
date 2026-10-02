@@ -169,7 +169,7 @@
   --spacing-hero: calc(100svh - var(--spacing-header));
   --spacing-hero-mosaic: min(
     23.75rem,
-    40svh,
+    30svh,
     31.4vw
   ); /* 31.4vw = proporción natural de la imagen */
   --spacing-emblem: min(28.75rem, 56svh);
